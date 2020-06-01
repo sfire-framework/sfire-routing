@@ -446,7 +446,7 @@ class Route {
      * @param string $identifier A unique identifier for the route
      * @return self
      */
-    public function error(int $type, string $identifier): self {
+    public function error(string $type, string $identifier): self {
 
         $this -> attributes['method'] 	  = ['any'];
         $this -> attributes['type']       = $type;
