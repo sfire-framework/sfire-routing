@@ -199,12 +199,18 @@ class Router {
 
         //Count the amount of found variables and optional variables
         foreach($vars[2] as $optional) {
-            ${'?' === $optional ? 'optionals' : 'parameters'}++;
+
+            if('?' === $optional) {
+                $optionals++;
+            }
+            else {
+                $parameters++;
+            }
         }
 
         //Check if the amount of found variables matches the amount of given variables
         if(count($variables) < $parameters) {
-            throw new InvalidArgumentException(sprintf('Incorrect number of parameters given for Router url with identifier "%s". Expecting %s with %s optional, got %s', $route['identifier'], count($parameters[2]), count($variables), $optionals));
+            throw new InvalidArgumentException(sprintf('Incorrect number of parameters given for Router url with identifier "%s". Expecting %s with %s optional variables, but received %s.', $route['identifier'], $parameters, $optionals, count($variables)));
         }
 
         foreach($vars[0] as $index => $variable) {
@@ -231,12 +237,12 @@ class Router {
             }
 
             //Check if the given variable matches the type of required variable
-            if(false === (bool) preg_match('#^' . str_replace('#', '\#', $replace) . '$#i', $variables[$type])) {
+            if(false === (bool) preg_match('#^' . str_replace('#', '\#', $replace) . '$#i', (string) $variables[$type])) {
                 throw new InvalidArgumentException(sprintf('Parameters given to router url width id "%s" do not match. Trying to match regular expression pattern "%s" with "%s" as subject', $route['identifier'], $replace, $variables[$type]));
             }
 
             //Create a URL with the given variable
-            $url = preg_replace('#'. preg_quote($match) .'#i', $variables[$type], $url, 1);
+            $url = preg_replace('#'. preg_quote($match) .'#i', (string) $variables[$type], $url, 1);
         }
 
         //Check if routes has a prefix and add it if it does
@@ -504,23 +510,23 @@ class Router {
      */
     private static function matchDomain(array $route, string $host): bool {
 
-       foreach($route['domains'] as $domain) {
+        foreach($route['domains'] as $domain) {
 
-           if($domain === $host || true === (bool) preg_match('#^'. str_replace('#', '\#', $domain) .'$#', (string) $host)) {
-               return true;
-           }
-       }
+            if($domain === $host || true === (bool) preg_match('#^'. str_replace('#', '\#', $domain) .'$#', (string) $host)) {
+                return true;
+            }
+        }
 
-       return false;
+        return false;
     }
 
 
     /**
-    * Checks if the current route method matches a given method or that the current route method is "any"
-    * @param array $route
-    * @param string $method The HTTP method, i.e. PUT or GET
-    * @return bool
-    */
+     * Checks if the current route method matches a given method or that the current route method is "any"
+     * @param array $route
+     * @param string $method The HTTP method, i.e. PUT or GET
+     * @return bool
+     */
     public static function isMethod(array $route, string $method): bool {
         return true === in_array('any', $route['method']) || true === in_array(strtolower($method), $route['method']);
     }

@@ -208,7 +208,7 @@ class Route {
         $group = Router :: getGroup();
 
         if(true === isset($group['middleware'])) {
-            $this -> attributes['middleware'] = array_replace_recursive($middleware, $group['middleware']);
+            $this -> attributes['middleware'] = array_unique(array_merge($group['middleware'], $middleware));
         }
         else {
             $this -> attributes['middleware'] = $middleware;

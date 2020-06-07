@@ -45,9 +45,9 @@ class Forward {
 
 	/**
      * Holds the amount of seconds before the forward will be taken place
-	 * @var int
+	 * @var float
 	 */
-	private ?int $seconds = null;
+	private ?float $seconds = null;
 
 
 	/**
@@ -111,10 +111,10 @@ class Forward {
 
 	/**
 	 * Set the amount of seconds before the redirect needs to be placed
-	 * @param int $seconds
+	 * @param float $seconds
 	 * @return self
 	 */
-	public function after(int $seconds): self {
+	public function after(float $seconds): self {
 
 		$this -> seconds = $seconds;
 		return $this;
@@ -153,5 +153,9 @@ class Forward {
 		if(null === $url -> getScheme() && strlen($this -> url) > 0) {
 			$this -> url = '/' . $this -> url;
 		}
+
+	        if(0 === strlen($this -> url)) {
+	            $this -> url = '/';
+	        }
 	}
 }
