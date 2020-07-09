@@ -25,8 +25,8 @@ class Router {
 
 
     /**
-     * Holds the Router instance
-     * @var self
+     * Contains instance of self
+     * @var null|self
      */
     private static ?self $instance = null;
 
@@ -60,7 +60,7 @@ class Router {
 
 
     /**
-     * Create and store new Route instance
+     * Returns instance of self
      * @return self
      */
     public static function getInstance(): self {
